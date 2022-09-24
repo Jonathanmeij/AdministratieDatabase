@@ -5,6 +5,6 @@ namespace AdminstratieApp
         public int Id { get; set; }
         public DateTimeBereik DateTimeBereik { get; set; }
         public Gast? Gast;
-        public List<Attractie> Attracties { get; set; }
+        public Attractie Attractie { get; set; }
     }
 }

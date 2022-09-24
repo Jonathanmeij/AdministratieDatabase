@@ -45,18 +45,18 @@ namespace AdminstratieApp
 
                 Console.WriteLine("Finished initialization");
 
-                Gast testGast = new Gast("testMail@gmail.com") { GeboorteDatum = new DateTime(2000, 3, 12) };
-                Attractie testAttractie = new Attractie("kaasHuis");
-                DateTimeBereik testDate = new DateTimeBereik() { Begin = new DateTime(2022, 6, 2), Eind = new DateTime(2022, 6, 3) };
-                c.Gasten.Add(testGast);
-                c.SaveChanges();
-                await c.Boek(testGast, testAttractie, testDate);
-                List<Reservering> res = c.Gasten.FirstOrDefault(item => item.Id == testGast.Id).Reserveringen.ToList();
-                Console.WriteLine(res[0].Attracties[0].Naam);
-                Console.WriteLine("klaar");
+                // Gast testGast = new Gast("testMail@gmail.com") { GeboorteDatum = new DateTime(2000, 3, 12) };
+                // Attractie testAttractie = new Attractie("kaasHuis");
+                // DateTimeBereik testDate = new DateTimeBereik() { Begin = new DateTime(2022, 6, 2), Eind = new DateTime(2022, 6, 3) };
+                // c.Gasten.Add(testGast);
+                // c.SaveChanges();
+                // await c.Boek(testGast, testAttractie, testDate);
+                // List<Reservering> res = c.Gasten.FirstOrDefault(item => item.Id == testGast.Id).Reserveringen.ToList();
+                // Console.WriteLine();
 
-                // Console.Write(await new DemografischRapport(c).Genereer());
-                // Console.ReadLine();
+                Console.Write(await new DemografischRapport(c).Genereer());
+                Console.ReadLine();
+
             }
         }
 

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdministratieApp.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220922130338_mijnEerste")]
-    partial class mijnEerste
+    [Migration("20220924174812_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,12 +29,7 @@ namespace AdministratieApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ReserveringId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ReserveringId");
 
                     b.ToTable("Attracties");
                 });
@@ -100,10 +95,15 @@ namespace AdministratieApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AttractieId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("GastId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AttractieId");
 
                     b.HasIndex("GastId");
 
@@ -173,19 +173,10 @@ namespace AdministratieApp.Migrations
                     b.ToTable("Medewerkers", (string)null);
                 });
 
-            modelBuilder.Entity("AdminstratieApp.Attractie", b =>
-                {
-                    b.HasOne("AdminstratieApp.Reservering", "Reservering")
-                        .WithMany("Attracties")
-                        .HasForeignKey("ReserveringId");
-
-                    b.Navigation("Reservering");
-                });
-
             modelBuilder.Entity("AdminstratieApp.GastInfo", b =>
                 {
                     b.HasOne("AdminstratieApp.Gast", "Gast")
-                        .WithOne("gastInfo")
+                        .WithOne("GastInfo")
                         .HasForeignKey("AdminstratieApp.GastInfo", "GastId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -250,6 +241,12 @@ namespace AdministratieApp.Migrations
 
             modelBuilder.Entity("AdminstratieApp.Reservering", b =>
                 {
+                    b.HasOne("AdminstratieApp.Attractie", "Attractie")
+                        .WithMany("Reserveringen")
+                        .HasForeignKey("AttractieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AdminstratieApp.Gast", null)
                         .WithMany("Reserveringen")
                         .HasForeignKey("GastId");
@@ -272,6 +269,8 @@ namespace AdministratieApp.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ReserveringId");
                         });
+
+                    b.Navigation("Attractie");
 
                     b.Navigation("DateTimeBereik")
                         .IsRequired();
@@ -342,18 +341,15 @@ namespace AdministratieApp.Migrations
                     b.Navigation("Gasten");
 
                     b.Navigation("OnderhoudsBeurten");
-                });
 
-            modelBuilder.Entity("AdminstratieApp.Reservering", b =>
-                {
-                    b.Navigation("Attracties");
+                    b.Navigation("Reserveringen");
                 });
 
             modelBuilder.Entity("AdminstratieApp.Gast", b =>
                 {
-                    b.Navigation("Reserveringen");
+                    b.Navigation("GastInfo");
 
-                    b.Navigation("gastInfo");
+                    b.Navigation("Reserveringen");
                 });
 #pragma warning restore 612, 618
         }

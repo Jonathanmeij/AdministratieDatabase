@@ -23,24 +23,36 @@ namespace AdminstratieApp
         }
         public async Task<bool> Boek(Gast g, Attractie a, DateTimeBereik d)
         {
-            Reservering r = new Reservering() { Gast = g, Attracties = new List<Attractie>() { a }, DateTimeBereik = d };
+            Reservering r = new Reservering() { Gast = g, Attractie = a, DateTimeBereik = d };
 
             var gast = Gasten.FirstOrDefault(item => item.Id == g.Id);
+
+            if (!Attracties.Contains(a))
+            {
+                return false;
+            }
+            if (!Gasten.Contains(g))
+            {
+                return false;
+            }
+            if (!await a.Vrij(this, d))
+            {
+                return false;
+            }
 
             if (gast != null)
             {
                 if (gast.Reserveringen == null)
                 {
-                    Console.WriteLine("leeg");
                     gast.Reserveringen = new List<Reservering> { r };
                 }
                 else
                 {
-                    Console.WriteLine("Vol");
                     gast.Reserveringen.Add(r);
                 }
-
             }
+
+            Gasten.First(gast => gast.Id == g.Id).Credits -= 1;
             return (await SaveChangesAsync() > 0);
         }
 
