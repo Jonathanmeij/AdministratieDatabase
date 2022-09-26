@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 namespace AdminstratieApp
 {
-    class DemografischRapport : Rapport
+    public class DemografischRapport : Rapport
     {
         private DatabaseContext context;
         public DemografischRapport(DatabaseContext context) => this.context = context;
@@ -38,6 +38,7 @@ namespace AdminstratieApp
         private async Task<Gast>? GastBijEmail(string email) => context.Gasten.SingleOrDefault(gast => gast.Email == email);
         private async Task<Gast?> GastBijGeboorteDatum(DateTime d) => context.Gasten.Single(gast => gast.GeboorteDatum == d);
         private async Task<double> PercentageBejaarden() => (double)context.Gasten.Where(gast => (gast.GeboorteDatum < DateTime.Now.AddYears(-80))).Count() / await AantalGebruikers() * 100; // testen 
+        private async Task<IEnumerable<Gast>> Blut() => context.Gasten.Where(gast => gast.Credits == 0);
         private async Task<int> HoogsteLeeftijd() => (int)berekenLeeftijd(context.Gasten.Select(gast => gast.GeboorteDatum).Min());
         // private async Task<(string dag, int aantal)[]> VerdelingPerDag() => context.Gasten.Where(gast => gast.EersteBezoek >= DateTime.Now.AddDays(-7)).ToList().GroupBy(gast => gast.EersteBezoek, (dagGroep, gasten) => (dag = dagGroep.DayOfWeek, aantal = gasten.Count()));
         // private async Task<int> FavorietCorrect() => /* ... */;

@@ -44,6 +44,10 @@
               "target": "Package",
               "version": "[6.0.9, )"
             },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[6.0.9, )"
+            },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[6.0.9, )"
@@ -53,6 +57,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.9, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.2, )"
             }
           },
           "imports": [

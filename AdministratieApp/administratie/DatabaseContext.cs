@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
+
 namespace AdminstratieApp
 {
-    class DatabaseContext : DbContext
+    public class DatabaseContext : DbContext
     {
         public DbSet<GastInfo> GastInfos { get; set; }
         public DbSet<Gast> Gasten { get; set; }
@@ -11,10 +12,12 @@ namespace AdminstratieApp
         public DbSet<Onderhoud> Onderhoud { get; set; }
         public DbSet<Attractie> Attracties { get; set; }
         public DbSet<Reservering> Reserveringen { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder b)
-        {
-            b.UseSqlite("Data Source=database.db");
-        }
+
+        public DatabaseContext(DbContextOptions options) : base(options) { }
+
+        // protected override void OnConfiguring(DbContextOptionsBuilder b)
+        // {
+        // }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Gebruiker>().ToTable("Gebruikers");
@@ -40,20 +43,27 @@ namespace AdminstratieApp
                 return false;
             }
 
-            if (gast != null)
+            await a.Semaphore.WaitAsync();
+            try
             {
-                if (gast.Reserveringen == null)
+                if (gast != null)
                 {
-                    gast.Reserveringen = new List<Reservering> { r };
+                    if (gast.Reserveringen == null)
+                    {
+                        gast.Reserveringen = new List<Reservering> { r };
+                    }
+                    else
+                    {
+                        gast.Reserveringen.Add(r);
+                    }
                 }
-                else
-                {
-                    gast.Reserveringen.Add(r);
-                }
+                Gasten.First(gast => gast.Id == g.Id).Credits -= 1;
             }
+            finally { a.Semaphore.Release(); }
 
-            Gasten.First(gast => gast.Id == g.Id).Credits -= 1;
-            return (await SaveChangesAsync() > 0);
+            SaveChanges();
+
+            return true;
         }
 
     }

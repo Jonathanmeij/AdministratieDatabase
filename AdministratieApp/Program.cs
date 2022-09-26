@@ -8,7 +8,10 @@ namespace AdminstratieApp
         public static async Task Main(string[] args)
         {
             Random random = new Random(1);
-            using (DatabaseContext c = new DatabaseContext())
+
+            var options = new DbContextOptionsBuilder<DatabaseContext>().UseSqlite("Data Source=database.db").Options;
+
+            using (DatabaseContext c = new DatabaseContext(options))
             {
                 c.Attracties.RemoveRange(c.Attracties);
                 c.Gebruikers.RemoveRange(c.Gebruikers);

@@ -4,10 +4,10 @@ namespace AdminstratieApp
     {
         public int Id { get; set; }
         public string Naam { get; set; }
-        //one to many relation with Onderhoud
         public List<Onderhoud> OnderhoudsBeurten { get; set; }
         public List<Gast> Gasten { get; set; }
         public List<Reservering> Reserveringen { get; set; }
+        public readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
 
         public Attractie(string Naam)
         {
@@ -28,7 +28,6 @@ namespace AdminstratieApp
 
         public async Task<bool> Vrij(DatabaseContext c, DateTimeBereik d)
         {
-            //explicit loading
             foreach (var r in c.Reserveringen)
             {
                 if (r.Attractie.Naam == this.Naam && d.Overlapt(r.DateTimeBereik))
